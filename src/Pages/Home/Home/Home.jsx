@@ -8,7 +8,7 @@ import MerchantSatisfactionBanner from '../MerchantSatisfactionBanner/MerchantSa
 import Reviews from '../Reviews/Reviews';
 
 
-const reviewsPromise=fetch('/reviews.json')
+const reviewsPromise=fetch('/reviews.json').then(res=>res.json())
 const Home = () => {
   return (
     <div>

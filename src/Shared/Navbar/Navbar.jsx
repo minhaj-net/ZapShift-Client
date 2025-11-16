@@ -8,7 +8,7 @@ const Navbar = () => {
     <>
       <div className="space-x-4">
         <NavLink>Service</NavLink>
-        <NavLink>Coverage</NavLink>
+        <NavLink to={"coverage"}>Coverage</NavLink>
         <NavLink>About Us</NavLink>
         <NavLink>Pricing</NavLink>
         <NavLink>Be a Rider</NavLink>
