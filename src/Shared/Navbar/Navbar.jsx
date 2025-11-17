@@ -58,7 +58,7 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-end space-x-3">
-            <Link className="btn">Sign in </Link>
+            <Link to={"/login"} className="btn">Sign in </Link>
             <Link className="btn btn-primary text-black font-medium  rounded-lg">Be A Rider </Link>
 
            <div className=" bg-black rounded-full w-9 text-white font-normal h-9 flex items-center justify-center">

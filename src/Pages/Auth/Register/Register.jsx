@@ -23,10 +23,10 @@ const Register = () => {
       });
   };
   return (
-    <div>
+    <div className="mt-10">
       <form onSubmit={handleSubmit(handleRegister)}>
         <fieldset className="fieldset">
-          <h3 className="text-3xl font-black">Create an Account</h3>
+          <h3 className="text-3xl font-black w-[320px]">Create an Account</h3>
           <p className="text-gray-700 ">Register with ZapShift</p>
           {/* name field */}
           <label className="label">Name</label>
@@ -68,10 +68,10 @@ const Register = () => {
           <div>
             <a className="link link-hover">Forgot password?</a>
           </div>
-          <button className="btn btn-primary text-black mt-4">Login</button>
+          <button className="btn btn-primary text-black mt-4">Register</button>
           <p>
             Already have an account?{" "}
-            <Link className="text-[#8FA748]" to={"/"}>
+            <Link className="text-[#8FA748]" to={"/login"}>
               Login
             </Link>{" "}
           </p>
