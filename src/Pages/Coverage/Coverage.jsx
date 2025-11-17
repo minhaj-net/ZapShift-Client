@@ -1,13 +1,28 @@
 import { Search } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLoaderData } from "react-router";
 
 const position = [23.685, 90.3563];
 const Coverage = () => {
+  const mapRef = useRef(null);
   const serviceCenter = useLoaderData();
-  console.log(serviceCenter);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const location = e.target.location.value;
+    const district = serviceCenter.find((c) =>
+      c.district.toLowerCase().includes(location.toLowerCase())
+    );
+
+    if (district) {
+      const coord = [district.latitude, district.longitude];
+      console.log(district, coord);
+      mapRef.current.flyTo(coord, 13);
+    }
+  };
+
+  // console.log(serviceCenter);
   return (
     <div className="max-w-7xl mx-auto mt-6 px-4">
       <div className="shadow-2xl rounded-3xl bg-white p-8 sm:p-10 lg:p-12">
@@ -23,24 +38,28 @@ const Coverage = () => {
           </div>
 
           {/* Input Field */}
-          <input
-            type="text"
-            placeholder="Search here"
-            className="flex-1 bg-transparent py-3 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none text-sm sm:text-base"
-          />
+          <form onSubmit={handleSearch}>
+            <input
+              name="location"
+              type="text"
+              placeholder="Search here"
+              className="flex-1 bg-transparent py-3 pr-4 text-gray-700 placeholder-gray-400 focus:outline-none text-sm sm:text-base"
+            />
 
-          {/* Search Button */}
-          <button className="bg-lime-400 hover:bg-lime-500 text-gray-800 font-semibold px-6 sm:px-8 py-3 rounded-full transition-colors duration-200 m-1">
-            Search
-          </button>
+            {/* Search Button */}
+            <button className="bg-lime-400 hover:bg-lime-500 text-gray-800 font-semibold px-6 sm:px-8 py-3 rounded-full transition-colors duration-200 m-1">
+              Search
+            </button>
+          </form>
         </div>
-        {/* Leaflet map container  */}
-        <div className="mt-6 border w-full h-[600px]">
+        {/* Leaflet m ap container  */}
+        <div className="mt-6 border border-secondary rounded-lg  w-full h-[600px]">
           <MapContainer
-            className="h-[600px]"
+            className="h-[600px] rounded-xl" 
             center={position}
             zoom={8}
             scrollWheelZoom={false}
+            ref={mapRef}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
