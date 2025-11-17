@@ -3,10 +3,15 @@ import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
 import useAuth from "../../../Hooks/useAuth";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
   const { signInUser } = useAuth();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const handleSignIn = (data) => {
     console.log("from data", data);
     signInUser(data.email, data.password)
@@ -28,19 +33,20 @@ const Login = () => {
           <label className="label">Email</label>
           <input
             type="email"
-            {...register("email")}
+            {...register("email", { required: true })}
             className="input"
             placeholder="Email"
           />
+          {errors.email?.type === "required" && <p>Email is required </p>}
           {/* password filed */}
           <label className="label">Password</label>
           <input
             type="password"
-            {...register("password")}
+            {...register("password", { required: true })}
             className="input"
             placeholder="Password"
           />
-
+          {errors.password?.type === "required" && <p>Password is required</p>}
           <div>
             <a className="link link-hover">Forgot password?</a>
           </div>
@@ -51,13 +57,10 @@ const Login = () => {
               Register
             </Link>{" "}
           </p>
-          <p className="text-center text-gray-700">or</p>
-          <button className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
-            <FcGoogle className="text-2xl" />
-            <span className="font-medium">Sign in with Google</span>
-          </button>
+       
         </fieldset>
       </form>
+      <SocialLogin></SocialLogin>
     </div>
   );
 };

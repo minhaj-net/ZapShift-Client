@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../../Hooks/useAuth";
 import { Link } from "react-router";
 import { FcGoogle } from "react-icons/fc";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
   const { createUser } = useAuth();
@@ -75,13 +76,9 @@ const Register = () => {
               Login
             </Link>{" "}
           </p>
-          <p className="text-center text-gray-700">or</p>
-          <button className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
-            <FcGoogle className="text-2xl" />
-            <span className="font-medium">Sign in with Google</span>
-          </button>
         </fieldset>
       </form>
+      <SocialLogin></SocialLogin>
     </div>
   );
 };
