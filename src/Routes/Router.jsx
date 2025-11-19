@@ -5,6 +5,9 @@ import Coverage from "../Pages/Coverage/Coverage";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Register/Register";
+import PrivateRoutes from "./PrivateRoutes";
+import Rider from "../Pages/Rider/Rider";
+import SendPercell from "../Pages/SendPercell/SendPercell";
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +17,14 @@ export const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "/rider",
+        element: <Rider></Rider>,
+      },
+      {
+        path: "send-percel",
+        element: <SendPercell></SendPercell>,
       },
       {
         path: "coverage",

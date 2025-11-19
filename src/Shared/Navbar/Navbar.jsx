@@ -2,16 +2,29 @@ import React from "react";
 import Logo from "../../Components/Logo/Logo";
 import { Link, NavLink } from "react-router";
 import { FaArrowRight } from "react-icons/fa";
+import useAuth from "../../Hooks/useAuth";
 
 const Navbar = () => {
+  const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   const links = (
     <>
       <div className="space-x-4">
         <NavLink>Service</NavLink>
         <NavLink to={"coverage"}>Coverage</NavLink>
         <NavLink>About Us</NavLink>
-        <NavLink>Pricing</NavLink>
-        <NavLink>Be a Rider</NavLink>
+        <NavLink to={"/send-percel"}>Send Percel</NavLink>
+        <NavLink to={"/rider"}>Be a Rider</NavLink>
       </div>
     </>
   );
@@ -56,14 +69,31 @@ const Navbar = () => {
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">{links}</ul>
           </div>
-
           <div className="navbar-end space-x-3">
-            <Link to={"/login"} className="btn">Sign in </Link>
-            <Link className="btn btn-primary text-black font-medium  rounded-lg">Be A Rider </Link>
+            {user ? (
+              <Link
+                onClick={handleLogOut}
+                className="btn btn-primary text-black font-medium  rounded-lg"
+              >
+                Log out
+              </Link>
+            ) : (
+              <div className="navbar-end space-x-3">
+                <Link to={"/login"} className="btn">
+                  Sign in{" "}
+                </Link>
+                <Link
+                  to={"/rider"}
+                  className="btn btn-primary text-black font-medium  rounded-lg"
+                >
+                  Be A Rider{" "}
+                </Link>
 
-           <div className=" bg-black rounded-full w-9 text-white font-normal h-9 flex items-center justify-center">
-             <FaArrowRight className="-rotate-45" />
-           </div>
+                <div className=" bg-black rounded-full w-9 text-white font-normal h-9 flex items-center justify-center">
+                  <FaArrowRight className="-rotate-45" />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

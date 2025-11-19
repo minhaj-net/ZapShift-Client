@@ -1,12 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../Hooks/useAuth";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
   const { signInUser } = useAuth();
+  const location = useLocation();
+  console.log(location);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -16,6 +19,7 @@ const Login = () => {
     console.log("from data", data);
     signInUser(data.email, data.password)
       .then((result) => {
+        navigate(location?.state || "/");
         console.log(result.user);
       })
       .catch((error) => {
@@ -53,11 +57,10 @@ const Login = () => {
           <button className="btn btn-primary text-black mt-4">Login</button>
           <p>
             Don’t have any account?{" "}
-            <Link className="text-[#8FA748]" to={"/register"}>
+            <Link state={location?.state} className="text-[#8FA748]" to={"/register"}>
               Register
             </Link>{" "}
           </p>
-       
         </fieldset>
       </form>
       <SocialLogin></SocialLogin>
