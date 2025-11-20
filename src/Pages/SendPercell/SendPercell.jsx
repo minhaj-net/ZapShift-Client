@@ -1,12 +1,49 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useLoaderData } from "react-router";
 
 const SendPercell = () => {
-  const { register, handleSubmit,  } = useForm();
+  const { register, handleSubmit, watch } = useForm();
+  const serviceCenter = useLoaderData();
+  const regionDuplicate = serviceCenter.map((c) => c.region);
+  // console.log(regionDuplicate);
+  const region = [...new Set(regionDuplicate)];
+  // console.log(region);
+  const senderRegion = watch("senderRegion");
+  const receverRegion = watch("receverRegion");
+  const districtByRegion = (region) => {
+    const regionDistrict = serviceCenter.filter(
+      (district) => district.region === region
+    );
+    console.log(regionDistrict);
+    const district = regionDistrict.map((d) => d.district);
+    console.log(district);
+    return district;
+  };
 
   const onSubmit = (data) => {
     console.log(data);
     // Handle form submission
+
+    const isDocument = data.parcelType === "Document";
+    const isSameDistrict = data.senderDistrict === data.receverDistrict;
+    const percelWeight = parseFloat(data.parcelWeight);
+    let cost = 0;
+    if (isDocument) {
+      cost = isSameDistrict ? 60 : 80;
+    } else {
+      if (percelWeight < 3) {
+        cost = isSameDistrict ? 110 : 150;
+      } else {
+        const minCharge = isSameDistrict ? 110 : 150;
+        const extraWeight = percelWeight - 3;
+        const extraCharge = isSameDistrict
+          ? extraWeight * 40
+          : extraWeight * 40 + 40;
+        cost = minCharge + extraCharge;
+      }
+    }
+    console.log("cost", cost);
   };
 
   const handleFormSubmit = (e) => {
@@ -27,13 +64,13 @@ const SendPercell = () => {
               <h2 className="text-base font-semibold text-gray-700 mb-4">
                 Enter your parcel details
               </h2>
-              
+
               <div className="flex gap-4 mb-6">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     value="Document"
-                    {...register('parcelType')}
+                    {...register("parcelType")}
                     className="radio radio-sm radio-success"
                     defaultChecked
                   />
@@ -43,7 +80,7 @@ const SendPercell = () => {
                   <input
                     type="radio"
                     value="Not-Document"
-                    {...register('parcelType')}
+                    {...register("parcelType")}
                     className="radio radio-sm"
                   />
                   <span className="text-sm">Not-Document</span>
@@ -59,7 +96,7 @@ const SendPercell = () => {
                   <input
                     type="text"
                     placeholder="Parcel Name"
-                    {...register('parcelName')}
+                    {...register("parcelName")}
                     className="input input-bordered w-full text-sm"
                   />
                 </div>
@@ -70,7 +107,7 @@ const SendPercell = () => {
                   <input
                     type="text"
                     placeholder="Parcel Weight (KG)"
-                    {...register('parcelWeight')}
+                    {...register("parcelWeight")}
                     className="input input-bordered w-full text-sm"
                   />
                 </div>
@@ -95,7 +132,7 @@ const SendPercell = () => {
                       <input
                         type="text"
                         placeholder="Sender Name"
-                        {...register('senderName')}
+                        {...register("senderName")}
                         className="input input-bordered input-sm w-full text-sm"
                       />
                     </div>
@@ -105,7 +142,7 @@ const SendPercell = () => {
                         Sender Pickup Who house
                       </label>
                       <select
-                        {...register('senderPickupWho')}
+                        {...register("senderPickupWho")}
                         className="select select-bordered select-sm w-full text-sm"
                       >
                         <option>Select Who house</option>
@@ -115,7 +152,17 @@ const SendPercell = () => {
                       </select>
                     </div>
                   </div>
-
+                  <div>
+                    <label className="block text-xs text-gray-600 mb-1">
+                      Sender Email
+                    </label>
+                    <input
+                      type="Email"
+                      placeholder="Sender Email"
+                      {...register("senderEmail")}
+                      className="input input-bordered input-sm w-full text-sm"
+                    />
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       {/* sender adress */}
@@ -125,7 +172,7 @@ const SendPercell = () => {
                       <input
                         type="text"
                         placeholder="Address"
-                        {...register('senderAddress')}
+                        {...register("senderAddress")}
                         className="input input-bordered input-sm w-full text-sm"
                       />
                     </div>
@@ -137,7 +184,7 @@ const SendPercell = () => {
                       <input
                         type="text"
                         placeholder="Sender Contact No"
-                        {...register('senderContact')}
+                        {...register("senderContact")}
                         className="input input-bordered input-sm w-full text-sm"
                       />
                     </div>
@@ -149,14 +196,28 @@ const SendPercell = () => {
                       Your Region
                     </label>
                     <select
-                      {...register('senderRegion')}
+                      {...register("senderRegion")}
                       className="select select-bordered select-sm w-full text-sm"
                     >
                       <option>Select your region</option>
-                      <option>Dhaka</option>
-                      <option>Chittagong</option>
-                      <option>Rajshahi</option>
-                      <option>Khulna</option>
+                      {region.map((r, i) => (
+                        <option key={i}>{r}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    {/* sender district */}
+                    <label className="block text-xs text-gray-600 mb-1">
+                      Your District
+                    </label>
+                    <select
+                      {...register("senderDistrict")}
+                      className="select select-bordered select-sm w-full text-sm"
+                    >
+                      <option>Select your District</option>
+                      {districtByRegion(senderRegion).map((r, i) => (
+                        <option key={i}>{r}</option>
+                      ))}
                     </select>
                   </div>
 
@@ -167,7 +228,7 @@ const SendPercell = () => {
                     </label>
                     <textarea
                       placeholder="Pickup Instruction"
-                      {...register('pickupInstruction')}
+                      {...register("pickupInstruction")}
                       className="textarea textarea-bordered w-full text-sm h-24"
                     ></textarea>
                   </div>
@@ -190,7 +251,7 @@ const SendPercell = () => {
                       <input
                         type="text"
                         placeholder="Receiver Name"
-                        {...register('receiverName')}
+                        {...register("receiverName")}
                         className="input input-bordered input-sm w-full text-sm"
                       />
                     </div>
@@ -200,7 +261,7 @@ const SendPercell = () => {
                         Receiver Delivery Who house
                       </label>
                       <select
-                        {...register('receiverDeliveryWho')}
+                        {...register("receiverDeliveryWho")}
                         className="select select-bordered select-sm w-full text-sm"
                       >
                         <option>Select Who house</option>
@@ -210,83 +271,108 @@ const SendPercell = () => {
                       </select>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      {/* receiver adress */}
-                      <label className="block text-xs text-gray-600 mb-1">
-                        Receiver Address
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Address"
-                        {...register('receiverAddress')}
-                        className="input input-bordered input-sm w-full text-sm"
-                      />
-                    </div>
-                    <div>
-                      {/* receiver contact */}
-                      <label className="block text-xs text-gray-600 mb-1">
-                        Receiver Contact No
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Sender Contact No"
-                        {...register('receiverContact')}
-                        className="input input-bordered input-sm w-full text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    {/* receiver region */}
+                  {/* recever email */}
+                  <div className="mb-4">
                     <label className="block text-xs text-gray-600 mb-1">
-                      Receiver Region
+                      Receiver Email
                     </label>
-                    <select
-                      {...register('receiverRegion')}
-                      className="select select-bordered select-sm w-full text-sm"
-                    >
-                      <option>Select your region</option>
-                      <option>Dhaka</option>
-                      <option>Chittagong</option>
-                      <option>Rajshahi</option>
-                      <option>Khulna</option>
-                    </select>
+                    <input
+                      type="Email"
+                      placeholder="Receiver Email"
+                      {...register("receiverEmail")}
+                      className="input input-bordered input-sm w-full text-sm"
+                    />
                   </div>
-
-                  <div>
-                    {/*Delivery Instruction  */}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="mb-4">
+                    {/* receiver adress */}
                     <label className="block text-xs text-gray-600 mb-1">
-                      Delivery Instruction
+                      Receiver Address
                     </label>
-                    <textarea
-                      placeholder="Delivery Instruction"
-                      {...register('deliveryInstruction')}
-                      className="textarea textarea-bordered w-full text-sm h-24"
-                    ></textarea>
+                    <input
+                      type="text"
+                      placeholder="Address"
+                      {...register("receiverAddress")}
+                      className="input input-bordered input-sm w-full text-sm"
+                    />
                   </div>
+                  <div>
+                    {/* receiver contact */}
+                    <label className="block text-xs text-gray-600 mb-1">
+                      Receiver Contact No
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Sender Contact No"
+                      {...register("receiverContact")}
+                      className="input input-bordered input-sm w-full text-sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Recever region */}
+                <div className="mb-4">
+                  <label className="block text-xs text-gray-600 mb-1">
+                    Your Region
+                  </label>
+                  <select
+                    {...register("receverRegion")}
+                    className="select select-bordered select-sm w-full text-sm"
+                  >
+                    <option>Select your region</option>
+                    {region.map((r, i) => (
+                      <option key={i}>{r}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Recever District */}
+                <div className="mb-4">
+                  <label className="block text-xs text-gray-600 mb-1">
+                    Your District
+                  </label>
+                  <select
+                    {...register("receverDistrict")}
+                    className="select select-bordered select-sm w-full text-sm"
+                  >
+                    <option>Select your District</option>
+                    {districtByRegion(receverRegion).map((r, i) => (
+                      <option key={i}>{r}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  {/*Delivery Instruction  */}
+                  <label className="block text-xs text-gray-600 mb-1">
+                    Delivery Instruction
+                  </label>
+                  <textarea
+                    placeholder="Delivery Instruction"
+                    {...register("deliveryInstruction")}
+                    className="textarea textarea-bordered w-full text-sm h-24"
+                  ></textarea>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Pickup Time Note */}
-            <div className="mt-6 mb-6">
-              <p className="text-xs text-gray-600">
-                * Pickup Time 4pm-7pm Approx.
-              </p>
-            </div>
+          {/* Pickup Time Note */}
+          <div className="mt-6 mb-6">
+            <p className="text-xs text-gray-600">
+              * Pickup Time 4pm-7pm Approx.
+            </p>
+          </div>
 
-            {/* Submit Button */}
-            <div className="mt-6">
-              <button
-                type="button"
-                onClick={handleFormSubmit}
-                className="btn bg-lime-400 hover:bg-lime-500 text-gray-800 font-semibold border-none w-full sm:w-auto px-12"
-              >
-                Proceed to Confirm Booking
-              </button>
-            </div>
+          {/* Submit Button */}
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={handleFormSubmit}
+              className="btn bg-lime-400 hover:bg-lime-500 text-gray-800 font-semibold border-none w-full sm:w-auto px-12"
+            >
+              Proceed to Confirm Booking
+            </button>
           </div>
         </div>
       </div>

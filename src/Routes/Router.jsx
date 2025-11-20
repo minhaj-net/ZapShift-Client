@@ -24,6 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "send-percel",
+        loader: () => fetch("/warehouses.json").then((res) => res.json()),
         element: <SendPercell></SendPercell>,
       },
       {
