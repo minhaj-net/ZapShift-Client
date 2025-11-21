@@ -8,6 +8,8 @@ import Register from "../Pages/Auth/Register/Register";
 import PrivateRoutes from "./PrivateRoutes";
 import Rider from "../Pages/Rider/Rider";
 import SendPercell from "../Pages/SendPercell/SendPercell";
+import DashBoardLayout from "../Layouts/DashBoardLayout";
+import MyPercels from "../Pages/Dashboard/MyPercels/MyPercels";
 
 export const router = createBrowserRouter([
   {
@@ -20,12 +22,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "/rider",
-        element: <Rider></Rider>,
+        element: (
+          <PrivateRoutes>
+            <Rider></Rider>
+          </PrivateRoutes>
+        ),
       },
       {
-        path: "send-percel",
+        path: "/send-percel",
         loader: () => fetch("/warehouses.json").then((res) => res.json()),
-        element: <SendPercell></SendPercell>,
+        element: (
+          <PrivateRoutes>
+            {" "}
+            <SendPercell></SendPercell>
+          </PrivateRoutes>
+        ),
       },
       {
         path: "coverage",
@@ -45,6 +56,20 @@ export const router = createBrowserRouter([
       {
         path: "register",
         Component: Register,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <DashBoardLayout></DashBoardLayout>
+      </PrivateRoutes>
+    ),
+    children: [
+      {
+        path: "my-percels",
+        Component: MyPercels,
       },
     ],
   },

@@ -34,7 +34,8 @@ const Register = () => {
           };
           updateUserProfile(userProfuile)
             .then((result) => {
-              navigate(location?.state || "/");
+        navigate(location?.state?.from?.pathname || "/");
+
               console.log(result.user);
             })
             .catch((err) => {
@@ -107,7 +108,7 @@ const Register = () => {
           <button className="btn btn-primary text-black mt-4">Register</button>
           <p>
             Already have an account?{" "}
-            <Link state={location?.state} className="text-[#8FA748]" to={"/login"}>
+            <Link state={location?.state?.from?.pathname} className="text-[#8FA748]" to={"/login"}>
               Login
             </Link>{" "}
           </p>

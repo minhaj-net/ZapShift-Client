@@ -2,10 +2,10 @@ import React from "react";
 import useAuth from "../Hooks/useAuth";
 import { Navigate, useLocation } from "react-router";
 
-const PrivateRoutes = ({ chidren }) => {
+const PrivateRoutes = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-  console.log(location);
+
   if (loading) {
     return (
       <div>
@@ -13,10 +13,14 @@ const PrivateRoutes = ({ chidren }) => {
       </div>
     );
   }
+
   if (!user) {
-    return <Navigate to="/login" state={location?.pathname}></Navigate>;
+    // sending current location so after login redirect back
+    return <Navigate to="/login" state={{ from: location }} replace />;
+
   }
-  return chidren;
+
+  return children;
 };
 
 export default PrivateRoutes;

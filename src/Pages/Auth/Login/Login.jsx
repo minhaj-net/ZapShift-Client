@@ -19,7 +19,8 @@ const Login = () => {
     console.log("from data", data);
     signInUser(data.email, data.password)
       .then((result) => {
-        navigate(location?.state || "/");
+        navigate(location?.state?.from?.pathname || "/");
+
         console.log(result.user);
       })
       .catch((error) => {
@@ -57,7 +58,11 @@ const Login = () => {
           <button className="btn btn-primary text-black mt-4">Login</button>
           <p>
             Don’t have any account?{" "}
-            <Link state={location?.state} className="text-[#8FA748]" to={"/register"}>
+            <Link
+              state={location?.state?.from?.pathname}
+              className="text-[#8FA748]"
+              to={"/register"}
+            >
               Register
             </Link>{" "}
           </p>

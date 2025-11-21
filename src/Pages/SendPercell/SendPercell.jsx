@@ -1,28 +1,36 @@
-import React from "react";
+import React, { use } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
+import { AuthContext } from "../../Context/AuthContext/AuthContext";
 
 const SendPercell = () => {
   const { register, handleSubmit, watch } = useForm();
+  const axiosSecure = useAxiosSecure();
   const serviceCenter = useLoaderData();
+  // const { user } = useAuth;
+  const {user}=use(AuthContext)
+  console.log(user?.displayName);
   const regionDuplicate = serviceCenter.map((c) => c.region);
-  // console.log(regionDuplicate);
+ 
   const region = [...new Set(regionDuplicate)];
-  // console.log(region);
+
   const senderRegion = watch("senderRegion");
   const receverRegion = watch("receverRegion");
   const districtByRegion = (region) => {
     const regionDistrict = serviceCenter.filter(
       (district) => district.region === region
     );
-    console.log(regionDistrict);
+    
     const district = regionDistrict.map((d) => d.district);
-    console.log(district);
+
     return district;
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+   
     // Handle form submission
 
     const isDocument = data.parcelType === "Document";
@@ -43,7 +51,30 @@ const SendPercell = () => {
         cost = minCharge + extraCharge;
       }
     }
-    console.log("cost", cost);
+  
+    Swal.fire({
+      title: "Plase Confrim The cost  ! ",
+      text: `You wont to pay ${cost} TAKA`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, I'il Pay",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //save to the percel info in database
+
+        axiosSecure.post("/percel", data).then((res) => {
+          console.log("after send data", res.data);
+        });
+
+        // Swal.fire({
+        //   title: "Deleted!",
+        //   text: "Your file has been deleted.",
+        //   icon: "success",
+        // });
+      }
+    });
   };
 
   const handleFormSubmit = (e) => {
@@ -132,6 +163,7 @@ const SendPercell = () => {
                       <input
                         type="text"
                         placeholder="Sender Name"
+                        defaultValue={user?.displayName}
                         {...register("senderName")}
                         className="input input-bordered input-sm w-full text-sm"
                       />
@@ -159,6 +191,7 @@ const SendPercell = () => {
                     <input
                       type="Email"
                       placeholder="Sender Email"
+                      defaultValue={user?.email}
                       {...register("senderEmail")}
                       className="input input-bordered input-sm w-full text-sm"
                     />
