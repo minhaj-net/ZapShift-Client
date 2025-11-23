@@ -11,6 +11,8 @@ import SendPercell from "../Pages/SendPercell/SendPercell";
 import DashBoardLayout from "../Layouts/DashBoardLayout";
 import MyPercels from "../Pages/Dashboard/MyPercels/MyPercels";
 import Payment from "../Pages/Dashboard/Payment/Payment";
+import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSucces";
+import PaymentCancelled from "../Pages/Dashboard/Payment/PaymentCancelled";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +66,14 @@ export const router = createBrowserRouter([
     children: [
       { path: "my-percels", Component: MyPercels },
       { path: "payment/:id", Component: Payment },
+      {
+        path: "payment-success",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment-cancelled",
+        Component: PaymentCancelled,
+      },
     ],
   },
 ]);
