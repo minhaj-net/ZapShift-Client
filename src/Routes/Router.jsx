@@ -10,31 +10,28 @@ import Rider from "../Pages/Rider/Rider";
 import SendPercell from "../Pages/SendPercell/SendPercell";
 import DashBoardLayout from "../Layouts/DashBoardLayout";
 import MyPercels from "../Pages/Dashboard/MyPercels/MyPercels";
+import Payment from "../Pages/Dashboard/Payment/Payment";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: RootLayouts,
     children: [
+      { index: true, Component: Home },
       {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "/rider",
+        path: "rider",
         element: (
           <PrivateRoutes>
-            <Rider></Rider>
+            <Rider />
           </PrivateRoutes>
         ),
       },
       {
-        path: "/send-percel",
+        path: "send-percel",
         loader: () => fetch("/warehouses.json").then((res) => res.json()),
         element: (
           <PrivateRoutes>
-            {" "}
-            <SendPercell></SendPercell>
+            <SendPercell />
           </PrivateRoutes>
         ),
       },
@@ -45,32 +42,28 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // AUTH ROUTES
   {
     path: "/",
     Component: AuthLayout,
     children: [
-      {
-        path: "login",
-        Component: Login,
-      },
-      {
-        path: "register",
-        Component: Register,
-      },
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
     ],
   },
+
+  // DASHBOARD ROUTES
   {
     path: "/dashboard",
     element: (
       <PrivateRoutes>
-        <DashBoardLayout></DashBoardLayout>
+        <DashBoardLayout />
       </PrivateRoutes>
     ),
     children: [
-      {
-        path: "my-percels",
-        Component: MyPercels,
-      },
+      { path: "my-percels", Component: MyPercels },
+      { path: "payment/:id", Component: Payment },
     ],
   },
 ]);

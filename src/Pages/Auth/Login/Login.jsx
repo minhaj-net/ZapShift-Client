@@ -8,8 +8,8 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 const Login = () => {
   const { signInUser } = useAuth();
   const location = useLocation();
-  console.log(location);
   const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -19,7 +19,7 @@ const Login = () => {
     console.log("from data", data);
     signInUser(data.email, data.password)
       .then((result) => {
-        navigate(location?.state?.from?.pathname || "/");
+        navigate(from, { replace: true });
 
         console.log(result.user);
       })
@@ -59,7 +59,7 @@ const Login = () => {
           <p>
             Don’t have any account?{" "}
             <Link
-              state={location?.state?.from?.pathname}
+              state={{ from: location.state?.from }}
               className="text-[#8FA748]"
               to={"/register"}
             >

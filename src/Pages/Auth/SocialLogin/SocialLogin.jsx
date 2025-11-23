@@ -9,10 +9,11 @@ const SocialLogin = () => {
   console.log(location);
   const navigate = useNavigate();
 
+  const from = location.state?.from?.pathname || "/";
   const handleGoogleCreatUser = () => {
     handleGoogleSignIn()
       .then((result) => {
-        navigate(location?.state || "/");
+        navigate(from, { replace: true });
         console.log(result.user);
       })
       .catch((error) => {

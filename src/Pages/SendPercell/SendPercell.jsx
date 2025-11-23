@@ -11,10 +11,10 @@ const SendPercell = () => {
   const axiosSecure = useAxiosSecure();
   const serviceCenter = useLoaderData();
   // const { user } = useAuth;
-  const {user}=use(AuthContext)
+  const { user } = use(AuthContext);
   console.log(user?.displayName);
   const regionDuplicate = serviceCenter.map((c) => c.region);
- 
+
   const region = [...new Set(regionDuplicate)];
 
   const senderRegion = watch("senderRegion");
@@ -23,14 +23,13 @@ const SendPercell = () => {
     const regionDistrict = serviceCenter.filter(
       (district) => district.region === region
     );
-    
+
     const district = regionDistrict.map((d) => d.district);
 
     return district;
   };
 
   const onSubmit = (data) => {
-   
     // Handle form submission
 
     const isDocument = data.parcelType === "Document";
@@ -51,7 +50,7 @@ const SendPercell = () => {
         cost = minCharge + extraCharge;
       }
     }
-  
+    data.cost = cost;
     Swal.fire({
       title: "Plase Confrim The cost  ! ",
       text: `You wont to pay ${cost} TAKA`,

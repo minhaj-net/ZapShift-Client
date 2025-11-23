@@ -8,8 +8,9 @@ import axios from "axios";
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
   const location = useLocation();
-  console.log(location);
   const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -34,7 +35,7 @@ const Register = () => {
           };
           updateUserProfile(userProfuile)
             .then((result) => {
-        navigate(location?.state?.from?.pathname || "/");
+              navigate(from, { replace: true });
 
               console.log(result.user);
             })
@@ -108,7 +109,7 @@ const Register = () => {
           <button className="btn btn-primary text-black mt-4">Register</button>
           <p>
             Already have an account?{" "}
-            <Link state={location?.state?.from?.pathname} className="text-[#8FA748]" to={"/login"}>
+            <Link className="text-[#8FA748]" to={"/login"}>
               Login
             </Link>{" "}
           </p>
