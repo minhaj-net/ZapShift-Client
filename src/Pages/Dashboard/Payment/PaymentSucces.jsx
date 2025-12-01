@@ -1,25 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { CheckCircle, Package, Mail, Home, FileText, Download } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router";
+import {
+  CheckCircle,
+  Package,
+  Mail,
+  Home,
+  FileText,
+  Download,
+} from "lucide-react";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(10);
+  // const [countdown, setCountdown] = useState(10);
+  const [paymentInfo, setPaymentInfo] = useState();
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  // console.log(sessionId);
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          navigate("/dashboard");
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (sessionId) {
+      axiosSecure
+        .patch(`/payment-success?session_id=${sessionId}`)
+        .then((res) => {
+          console.log(res.data);
+          setPaymentInfo({
+            trackingId: res.data.trackingId,
+            transactionId: res.data.transactionId,
+            amount: res.data.amount,
+          });
+        });
+    }
+  }, [axiosSecure, sessionId]);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCountdown((prev) => {
+  //       if (prev <= 1) {
+  //         clearInterval(timer);
+  //         navigate("/dashboard");
+  //         return 0;
+  //       }
+  //       return prev - 1;
+  //     });
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, [navigate]);
+  //   return () => clearInterval(timer);
+  // }, [navigate]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 py-6 sm:py-8 md:py-12 px-3 sm:px-4 lg:px-8">
@@ -39,14 +66,17 @@ const PaymentSuccess = () => {
             Payment Successful!
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-3 sm:mb-4 px-4">
-            Thank you for your payment. Your transaction has been completed successfully.
+            Thank you for your payment. Your transaction has been completed
+            successfully.
           </p>
-          
+
           {/* Transaction ID */}
           <div className="inline-block bg-white rounded-lg sm:rounded-xl px-4 sm:px-6 py-2 sm:py-3 shadow-md mx-4">
-            <p className="text-xs sm:text-sm text-gray-500 mb-1">Transaction ID</p>
+            <p className="text-xs sm:text-sm text-gray-500 mb-1">
+              Transaction ID
+            </p>
             <p className="text-sm sm:text-base md:text-lg font-mono font-semibold text-gray-900">
-              TXN-{Math.random().toString(36).substr(2, 9).toUpperCase()}
+              {paymentInfo?.transactionId}
             </p>
           </div>
         </div>
@@ -73,7 +103,7 @@ const PaymentSuccess = () => {
                     Amount Paid
                   </p>
                   <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-600">
-                    $99.00
+                    ${paymentInfo?.amount}
                   </p>
                 </div>
                 <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-green-500" />
@@ -153,7 +183,7 @@ const PaymentSuccess = () => {
           <p className="text-sm sm:text-base text-gray-600 mb-2">
             Redirecting to dashboard in{" "}
             <span className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 bg-green-100 text-green-600 font-bold rounded-full text-sm sm:text-base mx-1">
-              {countdown}
+              {/* {countdown} */}
             </span>
             seconds
           </p>
@@ -169,22 +199,30 @@ const PaymentSuccess = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-md text-center">
             <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto mb-1 sm:mb-2" />
-            <p className="text-xs sm:text-sm font-semibold text-gray-700">Verified</p>
+            <p className="text-xs sm:text-sm font-semibold text-gray-700">
+              Verified
+            </p>
           </div>
-          
+
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-md text-center">
             <Package className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mx-auto mb-1 sm:mb-2" />
-            <p className="text-xs sm:text-sm font-semibold text-gray-700">Processing</p>
+            <p className="text-xs sm:text-sm font-semibold text-gray-700">
+              Processing
+            </p>
           </div>
-          
+
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-md text-center">
             <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 mx-auto mb-1 sm:mb-2" />
-            <p className="text-xs sm:text-sm font-semibold text-gray-700">Email Sent</p>
+            <p className="text-xs sm:text-sm font-semibold text-gray-700">
+              Email Sent
+            </p>
           </div>
-          
+
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-md text-center">
             <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-500 mx-auto mb-1 sm:mb-2" />
-            <p className="text-xs sm:text-sm font-semibold text-gray-700">Receipt</p>
+            <p className="text-xs sm:text-sm font-semibold text-gray-700">
+              Receipt
+            </p>
           </div>
         </div>
       </div>

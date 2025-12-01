@@ -1,5 +1,6 @@
 import { FileMusic } from "lucide-react";
 import React from "react";
+import { FaRegCreditCard } from "react-icons/fa";
 import { Link, NavLink, Outlet } from "react-router";
 
 const DashBoardLayout = () => {
@@ -48,7 +49,7 @@ const DashBoardLayout = () => {
             {/* List item */}
             <li>
               <Link
-              to={"/"}
+                to={"/"}
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Homepage"
               >
@@ -69,10 +70,29 @@ const DashBoardLayout = () => {
                 <span className="is-drawer-close:hidden">Homepage</span>
               </Link>
             </li>
-                {/* Dashboard collection here */}
-                <li>
-                  <NavLink className="is-drawer-close:hidden" to={"/dashboard/my-percels"}> <FileMusic className="w-4" />My Percels</NavLink>
-                </li>
+            {/* Dashboard collection here */}
+            <li>
+              <NavLink
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="MyPercel"
+                to={"/dashboard/my-percels"}
+              >
+                {" "}
+                <FileMusic className="w-4" />
+                <span className="is-drawer-close:hidden">My Percels</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Payment History"
+                to={"/dashboard/payment-history"}
+              >
+                {" "}
+                <FaRegCreditCard />
+                <span className="is-drawer-close:hidden">Payment History</span>
+              </NavLink>
+            </li>
             {/* List item */}
             <li>
               <button
