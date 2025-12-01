@@ -44,6 +44,11 @@ const MyPercels = () => {
       }
     });
   };
+  const handlePayment=()=>{
+    const parcelInfo={
+      
+    }
+  }
 
   return (
     <div>
@@ -70,7 +75,7 @@ const MyPercels = () => {
 
                 {/* FIXED LINK HERE */}
                 <td>
-                  {percel.deleveryStatus === "paid" ? (
+                  {percel.paymentStatus === "paid" ? (
                     <span className="text-green-500">Paid</span>
                   ) : (
                     <Link

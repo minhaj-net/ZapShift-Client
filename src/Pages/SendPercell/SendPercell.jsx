@@ -1,6 +1,6 @@
 import React, { use } from "react";
 import { useForm } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAuth from "../../Hooks/useAuth";
@@ -10,6 +10,7 @@ const SendPercell = () => {
   const { register, handleSubmit, watch } = useForm();
   const axiosSecure = useAxiosSecure();
   const serviceCenter = useLoaderData();
+  const navigate = useNavigate();
   // const { user } = useAuth;
   const { user } = use(AuthContext);
   console.log(user?.displayName);
@@ -65,13 +66,17 @@ const SendPercell = () => {
 
         axiosSecure.post("/percel", data).then((res) => {
           console.log("after send data", res.data);
+          if (res.data.insertedId) {
+            navigate("/dashboard/my-percels");
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Your percel is ready for pay .please pay!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
         });
-
-        // Swal.fire({
-        //   title: "Deleted!",
-        //   text: "Your file has been deleted.",
-        //   icon: "success",
-        // });
       }
     });
   };
